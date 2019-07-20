@@ -6,7 +6,7 @@ RUN apt install sudo git lsb-release apt-utils p7zip-full wget curl brotli rsync
 RUN git config --global user.email "baalajimaestro@raphielgang.org"
 RUN git config --global user.name "baalajimaestro"
 RUN git clone https://github.com/akhilnarang/scripts
-RUN scripts
+RUN cd scripts
 RUN bash setup/android_build_env.sh
 RUN unlink /usr/bin/python
 RUN ln -s /lib/x86_64-linux-gnu/libncurses.so.6 /usr/lib/x86_64-linux-gnu/libncurses.so.5
