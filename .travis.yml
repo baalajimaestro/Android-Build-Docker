@@ -1,0 +1,12 @@
+language: bash
+
+dist: bionic
+
+services:
+  - docker
+
+script:
+  - docker build . -t baalajimaestro/android_build:latest
+  - docker tag baalajimaestro/pixelexp-ci:latest baalajimaestro/android_build:latest
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker push baalajimaestro/android_build
