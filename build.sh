@@ -5,6 +5,7 @@ git config --global user.email "baalajimaestro@raphielgang.org"
 git config --global user.name "baalajimaestro"
 git clone https://github.com/akhilnarang/scripts
 cd scripts
+sed 's/DEBIAN_10_PACKAGES=\"curl rsync\"/# DEBIAN_10_PACKAGES=\"curl rsync\"/g' setup/android_build_env.sh
 bash setup/android_build_env.sh
 unlink /usr/bin/python
 ln -s /lib/x86_64-linux-gnu/libncurses.so.6 /usr/lib/x86_64-linux-gnu/libncurses.so.5
