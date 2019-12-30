@@ -11,7 +11,7 @@ bash setup/android_build_env.sh
 
 RUN unlink /usr/bin/python && \ 
 ln -s /lib/x86_64-linux-gnu/libncurses.so.6 /usr/lib/x86_64-linux-gnu/libncurses.so.5 && \ 
-ln -s /usr/bin/python2.7 /usr/bin/python
+ln -s /usr/bin/python2.7 /usr/bin/python && echo "Done :)"
 
 RUN rm -rf /root/scripts
 
