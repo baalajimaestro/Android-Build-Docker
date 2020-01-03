@@ -1,6 +1,6 @@
 FROM debian:buster-slim
 
-RUN apt update && apt upgrade -y && apt install sudo git lsb-release apt-utils p7zip-full wget curl brotli rsync -y
+RUN apt update && apt upgrade -y && apt install sudo git lsb-release apt-utils p7zip-full wget curl brotli rsync moreutils -y
 
 RUN git config --global user.email "baalajimaestro@raphielgang.org" && \ 
     git config --global user.name "baalajimaestro" && \ 
