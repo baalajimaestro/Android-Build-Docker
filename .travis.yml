@@ -7,13 +7,11 @@ services:
 
 jobs:
   include:
-    - stage: "AOSP Image"
-      script:
-        - docker build -f Dockerfile.aosp . -t baalajimaestro/android_build:latest
-        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        - docker push baalajimaestro/android_build
-    - stage: "Kernel Image"
-      script:
-        - docker build -f Dockerfile.kernel . -t baalajimaestro/kernel_build:latest
-        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        - docker push baalajimaestro/kernel_build
+      - script:
+          - docker build -f Dockerfile.aosp . -t baalajimaestro/android_build:latest
+          - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+          - docker push baalajimaestro/android_build
+      - script:
+          - docker build -f Dockerfile.kernel . -t baalajimaestro/kernel_build:latest
+          - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+          - docker push baalajimaestro/kernel_build
