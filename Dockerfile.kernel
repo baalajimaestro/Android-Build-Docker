@@ -37,19 +37,8 @@ RUN apk add git \
             unzip \
             openjdk8 \
             pigz \
+            tar \
             build-base --no-cache
-
-ARG FORCE_UNSAFE_CONFIGURE=1
-
-RUN curl "https://ftp.gnu.org/gnu/tar/tar-latest.tar.xz" -so /root/tar-latest.tar.xz && \
-    echo "Building GNU TAR from source......" && \
-    cd /root && \
-    tar -xf tar-latest.tar.xz && \
-    cd tar-1* && \
-    ./configure &> /dev/null && \
-    make -j$(nproc) &> /dev/null && \
-    make install &> /dev/null && \
-    rm -rf /root/tar*
 
 RUN curl https://github.com/facebook/zstd/releases/download/v1.4.4/zstd-1.4.4.tar.gz -so /root/zstd.tar.gz && \
    echo "Building ZSTD from source......" && \

@@ -22,6 +22,7 @@ RUN apk add git \
             patchelf \
             brotli \
             unzip \
+            tar \
             p7zip --no-cache
 
 RUN apk add zip \
