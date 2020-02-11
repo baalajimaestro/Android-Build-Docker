@@ -39,29 +39,35 @@ RUN apk add git \
             pigz \
             build-base --no-cache
 
-RUN curl -L "https://kdrag0n.dev/files/redirector/proton_clang-latest.tar.zst" -o /root/proton-clang.tar.zst
+ARG FORCE_UNSAFE_CONFIGURE=1
 
-RUN cd /root/proton_clang* && echo $(pwd)/bin > /tm/clang_path
+RUN curl "https://ftp.gnu.org/gnu/tar/tar-latest.tar.xz" -so /root/tar-latest.tar.xz && \
+    echo "Building GNU TAR from source......" && \
+    cd /root && \
+    tar -xf tar-latest.tar.xz && \
+    cd tar-1* && \
+    ./configure &> /dev/null && \
+    make -j$(nproc) &> /dev/null && \
+    make install &> /dev/null && \
+    rm -rf /root/tar*
 
-RUN curl "https://ftp.gnu.org/gnu/tar/tar-latest.tar.xz" -o /root/tar-latest.tar.xz
+RUN curl https://github.com/facebook/zstd/releases/download/v1.4.4/zstd-1.4.4.tar.gz -so zstd.tar.gz && \
+   echo "Building ZSTD from source......" && \
+    tar -xf /root/zstd.tar.gz && \
+    cd /root/zstd-1.4.4 && \
+    make -j8 && \
+    make install && \
+    rm -rf /root/zstd*
 
-RUN cd /root && tar -xvf tar-latest.tar.xz && cd tar-1* && ./configure && make -j$(nproc) && make install
+RUN curl -L "https://kdrag0n.dev/files/redirector/proton_clang-latest.tar.zst" -so /root/proton-clang.tar.zst && \
+    tar -I zstd -xvf /root/proton-clang.tar.zst && \
+    cd /root/proton_clang* && \
+    echo $(pwd)/bin > /tmp/clang_path && \
+    rm -rf /root/proton-clang.tar.zst
 
-RUN rm -rf /root/tar*
-
-RUN curl https://github.com/facebook/zstd/releases/download/v1.4.4/zstd-1.4.4.tar.gz -o zstd-tar.gz
-
-RUN tar -xvf /root/zstd-1.4.4.tar.gz && cd /root/zstd-1.4.4 && make -j8 && make install
-
-RUN rm -rf /root/zstd*
-
-RUN tar -I zstd -xvf /root/proton-clang.tar.zst
-
-RUN rm -rf /root/proton-clang.tar.zst
-
-RUN git clone https://github.com/baalajimaestro/aarch64-maestro-linux-android -b 05022020 --depth=1 /root/gcc-10
-
-RUN cd /root/gcc-10 && echo $(pwd)/bin > /tmp/cc_path
+RUN git clone https://github.com/baalajimaestro/aarch64-maestro-linux-android -b 05022020 --depth=1 /root/gcc-10 && \
+    cd /root/gcc-10 && \
+    echo $(pwd)/bin > /tmp/cc_path
 
 
 RUN git config --global user.name "baalajimaestro"
