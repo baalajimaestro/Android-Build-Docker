@@ -51,7 +51,7 @@ RUN curl "https://ftp.gnu.org/gnu/tar/tar-latest.tar.xz" -so /root/tar-latest.ta
     make install &> /dev/null && \
     rm -rf /root/tar*
 
-RUN curl https://github.com/facebook/zstd/releases/download/v1.4.4/zstd-1.4.4.tar.gz -so zstd.tar.gz && \
+RUN curl https://github.com/facebook/zstd/releases/download/v1.4.4/zstd-1.4.4.tar.gz -so /root/zstd.tar.gz && \
    echo "Building ZSTD from source......" && \
     tar -xf /root/zstd.tar.gz && \
     cd /root/zstd-1.4.4 && \
