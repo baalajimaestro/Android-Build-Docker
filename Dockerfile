@@ -1,5 +1,9 @@
 FROM alpine:edge
 
+### Uncomment the community repository
+RUN  sed -e 's;^#http\(.*\)/edge/community;http\1/edge/community;g' \
+            -i /etc/apk/repositories
+            
 RUN apk update
 RUN apk add git \
             patchelf \
