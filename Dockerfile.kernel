@@ -41,9 +41,21 @@ RUN apk add git \
 
 RUN curl -L "https://kdrag0n.dev/files/redirector/proton_clang-latest.tar.zst" -o /root/proton-clang.tar.zst
 
-RUN tar -I zstd -xvf /root/proton-clang.tar.zst
-
 RUN cd /root/proton_clang* && echo $(pwd)/bin > /tm/clang_path
+
+RUN curl "https://ftp.gnu.org/gnu/tar/tar-latest.tar.xz" -o /root/tar-latest.tar.xz
+
+RUN cd /root && tar -xvf tar-latest.tar.xz && cd tar-1* && ./configure && make -j$(nproc) && make install
+
+RUN rm -rf /root/tar*
+
+RUN curl https://github.com/facebook/zstd/releases/download/v1.4.4/zstd-1.4.4.tar.gz -o zstd-tar.gz
+
+RUN tar -xvf /root/zstd-1.4.4.tar.gz && cd /root/zstd-1.4.4 && make -j8 && make install
+
+RUN rm -rf /root/zstd*
+
+RUN tar -I zstd -xvf /root/proton-clang.tar.zst
 
 RUN rm -rf /root/proton-clang.tar.zst
 
