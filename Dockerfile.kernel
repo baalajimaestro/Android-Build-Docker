@@ -1,0 +1,58 @@
+#
+# Copyright © 2019 Maestro Creativescape
+#
+# SPDX-License-Identifier: GPL-3.0
+#
+# Docker Image Builder for Android BuildSystem on Alpine Linux Edge
+# Deps picked primarily from https://github.com/akhilnarang/scripts
+# 
+FROM alpine:edge
+
+### Uncomment the community repository
+RUN  sed -e 's;^#http\(.*\)/edge/community;http\1/edge/community;g' \
+            -i /etc/apk/repositories
+
+RUN apk update
+
+### I have split the deps to several run steps to split the deps
+### across a lot of layers. This ensures your image is pulled a
+### lot faster. 
+
+RUN apk add git \
+            bc \
+            ccache \
+            ncurses5-libs \
+            bash \
+            moreutils \
+            automake \
+            autoconf \
+            gawk \
+            libtool \
+            zip \
+            curl \
+            wget \
+            gnupg \
+            python3 \
+            python3-dev \
+            unzip \
+            openjdk8 \
+            pigz \
+            build-base --no-cache
+
+RUN curl -L "https://kdrag0n.dev/files/redirector/proton_clang-latest.tar.zst" -o /root/proton-clang.tar.zst
+
+RUN tar -I zstd -xvf /root/proton-clang.tar.zst
+
+RUN cd /root/proton_clang* && echo $(pwd)/bin > /tm/clang_path
+
+RUN rm -rf /root/proton-clang.tar.zst
+
+RUN git clone https://github.com/baalajimaestro/aarch64-maestro-linux-android -b 05022020 --depth=1 /root/gcc-10
+
+RUN cd /root/gcc-10 && echo $(pwd)/bin > /tmp/cc_path
+
+
+RUN git config --global user.name "baalajimaestro"
+RUN git config --global user.email "baalajimaestro@pixelexperience.org"
+
+CMD ["bash"]

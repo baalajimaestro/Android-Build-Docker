@@ -6,6 +6,9 @@ services:
   - docker
 
 script:
-  - docker build . -t baalajimaestro/android_build:latest
+  - docker build -f Dockerfile.aosp . -t baalajimaestro/android_build:latest
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker push baalajimaestro/android_build
+  - docker build -f Dockerfile.kernel . -t baalajimaestro/kernel_build:latest
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker push baalajimaestro/kernel_build

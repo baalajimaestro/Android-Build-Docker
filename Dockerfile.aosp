@@ -22,7 +22,7 @@ RUN apk add git \
             patchelf \
             brotli \
             unzip \
-            p7zip --no-cache || echo "Done!"
+            p7zip --no-cache
 
 RUN apk add zip \
             curl \
