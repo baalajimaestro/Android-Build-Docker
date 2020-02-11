@@ -23,40 +23,50 @@ RUN apk add git \
             ccache \
             ncurses5-libs \
             bash \
-            moreutils \
-            automake \
+            moreutils --no-cache
+
+RUN apk add automake \
             autoconf \
             gawk \
             libtool \
             zip \
-            curl \
-            wget \
+            curl --no-cache
+
+RUN apk add wget \
             gnupg \
             python3 \
             python3-dev \
-            unzip \
-            openjdk8 \
+            unzip --no-cache
+            
+RUN apk add openjdk8 \
             pigz \
             tar \
             build-base --no-cache
 
-RUN curl https://github.com/facebook/zstd/releases/download/v1.4.4/zstd-1.4.4.tar.gz -so /root/zstd.tar.gz && \
+RUN curl -L https://github.com/facebook/zstd/releases/download/v1.4.4/zstd-1.4.4.tar.gz -so /root/zstd.tar.gz &> /dev/null && \
    echo "Building ZSTD from source......" && \
+    cd /root/ && \
     tar -xf /root/zstd.tar.gz && \
-    cd /root/zstd-1.4.4 && \
-    make -j8 && \
-    make install && \
+    cd /root/zstd-1.4.4/ && \
+    make -j8 &> /dev/null && \
+    make install &> /dev/null && \
     rm -rf /root/zstd*
 
-RUN curl -L "https://kdrag0n.dev/files/redirector/proton_clang-latest.tar.zst" -so /root/proton-clang.tar.zst && \
-    tar -I zstd -xvf /root/proton-clang.tar.zst && \
+RUN echo "Installing Proton Clang......" && \
+    curl -L "https://kdrag0n.dev/files/redirector/proton_clang-latest.tar.zst" -so /root/proton-clang.tar.zst &> /dev/null && \
+    cd /root/ && \
+    tar -I zstd -xf /root/proton-clang.tar.zst && \
     cd /root/proton_clang* && \
     echo $(pwd)/bin > /tmp/clang_path && \
     rm -rf /root/proton-clang.tar.zst
 
-RUN git clone https://github.com/baalajimaestro/aarch64-maestro-linux-android -b 05022020 --depth=1 /root/gcc-10 && \
+RUN echo "Cloning Toolchains....." && \
+    git clone https://github.com/baalajimaestro/aarch64-maestro-linux-android -b 05022020 --depth=1 /root/gcc-10 &> /dev/null && \
+    git clone https://github.com/baalajimaestro/arm-maestro-linux-gnueabi -b 05022020 --depth=1 /root/gcc-10-arm &> /dev/null && \
     cd /root/gcc-10 && \
-    echo $(pwd)/bin > /tmp/cc_path
+    echo $(pwd)/bin > /tmp/cc_path && \
+    cd /root/gcc-10-arm && \
+    echo $(pwd)/bin > /tmp/arm_cc_path
 
 
 RUN git config --global user.name "baalajimaestro"
