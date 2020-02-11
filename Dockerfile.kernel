@@ -62,12 +62,13 @@ RUN echo "Installing Proton Clang......" && \
 
 RUN echo "Cloning Toolchains....." && \
     git clone https://github.com/baalajimaestro/aarch64-maestro-linux-android -b 05022020 --depth=1 /root/gcc-10 &> /dev/null && \
-    git clone https://github.com/baalajimaestro/arm-maestro-linux-gnueabi -b 05022020 --depth=1 /root/gcc-10-arm &> /dev/null && \
     cd /root/gcc-10 && \
-    echo $(pwd)/bin > /tmp/cc_path && \
+    echo $(pwd)/bin > /tmp/cc_path
+
+
+RUN git clone https://github.com/baalajimaestro/arm-maestro-linux-gnueabi -b 05022020 --depth=1 /root/gcc-10-arm &> /dev/null && \
     cd /root/gcc-10-arm && \
     echo $(pwd)/bin > /tmp/arm_cc_path
-
 
 RUN git config --global user.name "baalajimaestro"
 RUN git config --global user.email "baalajimaestro@pixelexperience.org"
