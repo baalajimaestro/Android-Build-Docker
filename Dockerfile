@@ -65,6 +65,7 @@ RUN apk add bc \
             squashfs-tools \
             texinfo \
             re2c \
+            clang-dev \
             pngcrush --no-cache
 
 RUN apk add libpng-dev \
