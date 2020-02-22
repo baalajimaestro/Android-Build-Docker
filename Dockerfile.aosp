@@ -82,6 +82,11 @@ RUN apk add zlib-dev \
             ccache \
             sudo \
             ca-certificates --no-cache
+            
+RUN apk add findutils \
+            patch \
+            grep \
+            bzip2 --no-cache           
 
 ### schedtool is needed by a few roms, but is not on newest edge repos
 ### A quick google revealed it lying on v3.0, pull it from there.
