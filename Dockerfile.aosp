@@ -56,6 +56,9 @@ RUN apk add xz-dev \
             mpc1-dev \
             mpfr-dev \
             ncurses5-libs \
+            ncurses5-widec-libs \
+            ncurses \
+            ncurses-dev \
             unzip \
             openssl-dev \
             axel --no-cache
