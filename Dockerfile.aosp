@@ -3,106 +3,52 @@
 #
 # SPDX-License-Identifier: GPL-3.0
 #
-# Docker Image Builder for Android BuildSystem on Alpine Linux Edge
-# Deps picked primarily from https://github.com/akhilnarang/scripts
+# Docker Image Builder for Android BuildSystem on OpenSUSE
 # 
-FROM alpine:edge
+FROM opensuse/tumbleweed
 
-### Uncomment the community repository
-RUN  sed -e 's;^#http\(.*\)/edge/community;http\1/edge/community;g' \
-            -i /etc/apk/repositories
+# We're using "docker" as Worker
+ENV WORKER=docker
 
-RUN apk update
+RUN zypper -n install autoconf automake binutils bison blog 
+RUN zypper -n install branding-openSUSE chkstat cpp cpp9 cracklib 
+RUN zypper -n install dbus-1 device-mapper flex gcc gcc9 gdbm-devel 
+RUN zypper -n install gettext-runtime gettext-tools glibc-devel 
+RUN zypper -n install iproute2 kbd kbd-legacy kmod libaio1 libapparmor1 
+RUN zypper -n install libargon2-1 libasan5 libatomic1 libaudit1 
+RUN zypper -n install libblkid1 libblogger2 libcap-ng0 libcrack2 
+RUN zypper -n install libcryptsetup12 libdb-4_8 libdbus-1-3 libdevmapper-event1_03 
+RUN zypper -n install libdevmapper1_03 libeconf0 libelf1 libexpat1 libfdisk1 
+RUN zypper -n install libfl-devel libfl2 libgdbm6 libgdbm_compat4 libgomp1 
+RUN zypper -n install libisl22 libitm1 libjson-c4 libkmod2 liblsan0 libltdl7 
+RUN zypper -n install libmnl0 libmount1 libmpc3 libmpfr6 libnl-config libnl3-200 
+RUN zypper -n install libnsl2 libpcre2-8-0 libpkgconf3 libqrencode4 libseccomp2 
+RUN zypper -n install libsemanage1 libsepol1 libsmartcols1 libtextstyle0 
+RUN zypper -n install libtirpc-netconfig libtirpc3 libtool libtsan0 libubsan1 
+RUN zypper -n install libutempter0 libuuid1 libxcrypt-devel libxtables12 linux-glibc-devel 
+RUN zypper -n install m4 make makeinfo ncurses-devel pam pam-config patch 
+RUN zypper -n install patterns-base-basesystem patterns-base-minimal_base 
+RUN zypper -n install patterns-devel-base-devel_basis perl perl-Text-Unidecode 
+RUN zypper -n install permissions permissions-config pkgconf pkgconf-m4 
+RUN zypper -n install pkgconf-pkg-config shadow sysconfig sysconfig-netconfig 
+RUN zypper -n install system-group-hardware system-group-wheel system-user-bin 
+RUN zypper -n install system-user-daemon system-user-nobody systemd 
+RUN zypper -n install systemd-presets-branding-openSUSE systemd-presets-common-SUSE 
+RUN zypper -n install sysuser-shadow sysvinit-tools tack tar thin-provisioning-tools 
+RUN zypper -n install udev util-linux util-linux-systemd wicked wicked-service xz zlib-devel
+RUN zypper -n install curl git glibc-devel-32bit ncurses-devel-32bit readline-devel-32bit libz1-32bit
+RUN zypper -n install gperf libSDL-devel libxml2-tools lzop unzip
+RUN zypper -n install java-11-openjdk java-11-openjdk-devel schedtool 
+RUN zypper -n install squashfs libxslt1 zip gcc-c++ nano sudo which bc python3 libncurses5
 
-### I have split the deps to several run steps to split the deps
-### across a lot of layers. This ensures your image is pulled a
-### lot faster. 
+RUN ln -s /usr/bin/python3 /usr/bin/python
 
-RUN apk add git \
-            patchelf \
-            brotli \
-            unzip \
-            tar \
-            p7zip --no-cache
+RUN sudo curl --create-dirs -L -o /usr/local/bin/repo -O -L https://storage.googleapis.com/git-repo-downloads/repo
+RUN sudo chmod a+rx /usr/local/bin/repo
 
-RUN apk add zip \
-            curl \
-            wget \
-            gnupg \
-            python3 \
-            python3-dev --no-cache
-
-RUN apk add bash \
-            moreutils \
-            openssh \
-            openssl \
-            brotli --no-cache
-
-RUN apk add rsync \
-            build-base \
-            automake \
-            autoconf \
-            gawk \
-            gperf --no-cache
-
-RUN apk add htop \
-            libc6-compat \
-            libcap-ng-dev \
-            expat-dev \
-            gmp-dev \
-            lz4-dev --no-cache
-
-RUN apk add xz-dev \
-            mpc1-dev \
-            mpfr-dev \
-            ncurses5-libs \
-            ncurses5-widec-libs \
-            ncurses \
-            ncurses-dev \
-            unzip \
-            openssl-dev \
-            axel --no-cache
-
-RUN apk add bc \
-            bison \
-            libtool \
-            squashfs-tools \
-            texinfo \
-            re2c \
-            clang-dev \
-            pngcrush --no-cache
-
-RUN apk add libpng-dev \
-            subversion \
-            maven \
-            w3m \
-            ncftp \
-            libxslt --no-cache
-
-RUN apk add zlib-dev \
-            lzip \
-            unzip \
-            ccache \
-            sudo \
-            ca-certificates --no-cache
-            
-RUN apk add findutils \
-            patch \
-            grep \
-            bzip2 --no-cache           
-
-### schedtool is needed by a few roms, but is not on newest edge repos
-### A quick google revealed it lying on v3.0, pull it from there.
-RUN apk add schedtool --update-cache --repository http://dl-8.alpinelinux.org/alpine/v3.0/testing/ --allow-untrusted
-
-### Set up adb udev rules
-RUN curl --create-dirs -L -o /etc/udev/rules.d/51-android.rules -O -L https://raw.githubusercontent.com/M0Rf30/android-udev-rules/master/51-android.rules
-RUN chmod 644 /etc/udev/rules.d/51-android.rules
-RUN chown root /etc/udev/rules.d/51-android.rules
-
-### Install android repo command
-RUN curl --create-dirs -L -o /usr/local/bin/repo -O -L https://storage.googleapis.com/git-repo-downloads/repo
-RUN chmod a+x /usr/local/bin/repo
+RUN sudo curl --create-dirs -L -o /etc/udev/rules.d/51-android.rules -O -L https://raw.githubusercontent.com/M0Rf30/android-udev-rules/master/51-android.rules
+RUN sudo chmod 644 /etc/udev/rules.d/51-android.rules
+RUN sudo chown root /etc/udev/rules.d/51-android.rules
 
 RUN git config --global user.name "baalajimaestro"
 RUN git config --global user.email "baalajimaestro@pixelexperience.org"
