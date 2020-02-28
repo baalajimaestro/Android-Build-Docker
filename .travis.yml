@@ -21,6 +21,6 @@ jobs:
     - stage: Build the BuildBot Runner
       name: "BuildBot"
       script:
-      - docker build -f Dockerfile.buildbot . -t baalajimaestro/kernel_build:latest
+      - docker build -f Dockerfile.buildbot . -t baalajimaestro/aosp_buildbot:latest
       - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       - docker push baalajimaestro/aosp_buildbot
