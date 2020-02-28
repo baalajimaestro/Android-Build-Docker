@@ -1,19 +1,26 @@
+#
+# Copyright © 2019 Maestro Creativescape
+#
+# SPDX-License-Identifier: GPL-3.0
+#
+# My Personal AOSP BuildBot
+# 
 FROM baalajimaestro/android_build
 
 RUN sudo echo "baalajimaestro ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 RUN useradd baalajimaestro --create-home
 RUN mkdir /android
 RUN chown -R baalajimaestro /android
-RUN chmod -R 777 /app
+RUN chmod -R 777 /android
 
 USER baalajimaestro
 
-ENV USER=baalajimaestro \
-    HOSTNAME=maestrobox \
-    USE_CCACHE=1 \
-    CCACHE_DIR=/tmp/ccache
+ENV CCACHE_DIR=/tmp/ccache
 
 WORKDIR /android
+
+RUN git config --global user.name "baalajimaestro"
+RUN git config --global user.email "baalajimaestro@pixelexperience.org"
 
 VOLUME ["/tmp/ccache", "/android"]
 
