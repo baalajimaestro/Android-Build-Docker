@@ -24,4 +24,4 @@ RUN git config --global user.email "baalajimaestro@pixelexperience.org"
 
 VOLUME ["/tmp/ccache", "/android"]
 
-ENTRYPOINT ["/bin/bash"]
+ENTRYPOINT ["/bin/bash /root/conda.run", "/bin/bash"]

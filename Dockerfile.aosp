@@ -37,9 +37,14 @@ RUN zypper -n install systemd-presets-branding-openSUSE systemd-presets-common-S
 RUN zypper -n install sysuser-shadow sysvinit-tools tack tar thin-provisioning-tools 
 RUN zypper -n install udev util-linux util-linux-systemd wicked wicked-service xz zlib-devel
 RUN zypper -n install curl git glibc-devel-32bit ncurses-devel-32bit readline-devel-32bit libz1-32bit
-RUN zypper -n install gperf libSDL-devel libxml2-tools lzop python
+RUN zypper -n install gperf libSDL-devel libxml2-tools lzop
 RUN zypper -n install java-11-openjdk java-11-openjdk-devel schedtool 
-RUN zypper -n install squashfs libxslt1 zip gcc-c++ nano sudo which bc python3 libncurses5
+RUN zypper -n install squashfs libxslt1 zip gcc-c++ nano sudo which bc libncurses5
+
+## Official Python is derped
+## Workaround it
+
+RUN curl https://repo.anaconda.com/miniconda/Miniconda2-latest-Linux-x86_64.sh -o Miniconda2-latest-Linux-x86_64.sh > bash - -b -p /opt/miniconda
 
 RUN sudo curl --create-dirs -L -o /usr/local/bin/repo -O -L https://storage.googleapis.com/git-repo-downloads/repo
 RUN sudo chmod a+rx /usr/local/bin/repo
@@ -47,5 +52,10 @@ RUN sudo chmod a+rx /usr/local/bin/repo
 RUN sudo curl --create-dirs -L -o /etc/udev/rules.d/51-android.rules -O -L https://raw.githubusercontent.com/M0Rf30/android-udev-rules/master/51-android.rules
 RUN sudo chmod 644 /etc/udev/rules.d/51-android.rules
 RUN sudo chown root /etc/udev/rules.d/51-android.rules
+
+COPY conda.run /root/conda.run
+RUN chmod 777 /root/conda.run
+
+ENTRYPOINT ["/bin/bash /root/conda.run"]
 
 CMD ["bash"]
