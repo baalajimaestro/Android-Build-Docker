@@ -1,0 +1,20 @@
+FROM baalajimaestro/android_build
+
+RUN sudo echo "baalajimaestro ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+RUN useradd baalajimaestro --create-home
+RUN mkdir /android
+RUN chown -R baalajimaestro /android
+RUN chmod -R 777 /app
+
+USER baalajimaestro
+
+ENV USER=baalajimaestro \
+    HOSTNAME=maestrobox \
+    USE_CCACHE=1 \
+    CCACHE_DIR=/tmp/ccache
+
+WORKDIR /android
+
+VOLUME ["/tmp/ccache", "/android"]
+
+ENTRYPOINT ["/bin/bash"]
