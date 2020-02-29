@@ -21,57 +21,64 @@ RUN zypper -n install autoconf \
                       cpp9 \
                       cracklib
 
-RUN zypper -n install dbus-1 device-mapper flex gcc gcc9 gdbm-devel 
+RUN zypper -n install dbus-1 \
+                      device-mapper \
+                      flex \
+                      gcc \
+                      gcc9 \
+                      gdbm-devel 
 
 # Necessary Libs
-RUN zypper -n install libpcre2-8-0 \
-                      libqrencode4 \
-                      libseccomp2 \
-                      libutempter0 \
-                      libtool \
-                      libsmartcols1 \
-                      libmount1 \
-                      libnl-config \
-                      libnl3-200 \
-                      libkmod2 \
-                      libltdl7 \
-                      libfdisk1 \
-                      libcryptsetup12 \
-                      libblkid1 \
-                      libargon2-1 \
+RUN zypper -n install bc \
+                      curl \
                       gettext-runtime \
                       gettext-tools \
+                      git \
+                      glibc-devel-32bit \
                       iproute2 \
                       kbd \
                       kbd-legacy \
                       kmod \
                       libapparmor1 \
+                      libargon2-1 \
+                      libblkid1 \
+                      libcryptsetup12 \
+                      libfdisk1 \
+                      libkmod2 \
+                      libltdl7 \
+                      libmount1 \
+                      libnl3-200 \
+                      libnl-config \
+                      libpcre2-8-0 \
+                      libqrencode4 \
+                      libseccomp2 \
+                      libsmartcols1 \
+                      libtool \
+                      libutempter0 \
+                      libz1-32bit \
                       make \
                       makeinfo \
                       ncurses-devel \
+                      ncurses-devel-32bit \
                       pam-config patch \
                       patterns-base-basesystem \
                       patterns-base-minimal_base \
-                      zlib-devel \
-                      bc \
+                      readline-devel-32bit \
+                      schedtool \
                       which \
                       zip \
-                      curl \
-                      git \
-                      glibc-devel-32bit \
-                      ncurses-devel-32bit \
-                      readline-devel-32bit \
-                      libz1-32bit \
-                      schedtool 
+                      zlib-devel
 
 RUN zypper -n install gperf libSDL-devel libxml2-tools lzop
-RUN zypper -n install java-1_8_0-openjdk ImageMagick
-RUN zypper -n install squashfs libxslt1 gcc-c++ nano sudo libncurses5
+RUN zypper -n install ImageMagick java-1_8_0-openjdk 
+RUN zypper -n install gcc-c++ libncurses5 libxslt1 nano squashfs sudo
 
 ## Official Python is derped
 ## Workaround it
 
-RUN curl https://repo.anaconda.com/miniconda/Miniconda2-latest-Linux-x86_64.sh -o Miniconda2-latest-Linux-x86_64.sh && bash Miniconda2-latest-Linux-x86_64.sh -b -p /opt/miniconda && rm -rf Miniconda2-latest-Linux-x86_64.sh
+RUN curl https://repo.anaconda.com/miniconda/Miniconda2-latest-Linux-x86_64.sh -o Miniconda2-latest-Linux-x86_64.sh && \
+    bash Miniconda2-latest-Linux-x86_64.sh -b -p /opt/miniconda && \
+    rm -rf Miniconda2-latest-Linux-x86_64.sh
 
 COPY conda.run /root/conda.run
 
