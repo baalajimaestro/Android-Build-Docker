@@ -19,8 +19,8 @@ RUN zypper -n install autoconf \
                       chkstat \
                       cpp \
                       cpp9 \
-                      cracklib 
-                      
+                      cracklib
+
 RUN zypper -n install dbus-1 device-mapper flex gcc gcc9 gdbm-devel 
 
 # Necessary Libs
@@ -65,7 +65,7 @@ RUN zypper -n install libpcre2-8-0 \
                       schedtool 
 
 RUN zypper -n install gperf libSDL-devel libxml2-tools lzop
-RUN zypper -n install java-1_8_0-openjdk
+RUN zypper -n install java-1_8_0-openjdk ImageMagick
 RUN zypper -n install squashfs libxslt1 gcc-c++ nano sudo libncurses5
 
 ## Official Python is derped
@@ -73,15 +73,14 @@ RUN zypper -n install squashfs libxslt1 gcc-c++ nano sudo libncurses5
 
 RUN curl https://repo.anaconda.com/miniconda/Miniconda2-latest-Linux-x86_64.sh -o Miniconda2-latest-Linux-x86_64.sh && bash Miniconda2-latest-Linux-x86_64.sh -b -p /opt/miniconda && rm -rf Miniconda2-latest-Linux-x86_64.sh
 
-RUN sudo curl --create-dirs -L -o /usr/local/bin/repo -O -L https://storage.googleapis.com/git-repo-downloads/repo
-RUN sudo chmod a+rx /usr/local/bin/repo
-
-RUN sudo curl --create-dirs -L -o /etc/udev/rules.d/51-android.rules -O -L https://raw.githubusercontent.com/M0Rf30/android-udev-rules/master/51-android.rules
-RUN sudo chmod 644 /etc/udev/rules.d/51-android.rules
-RUN sudo chown root /etc/udev/rules.d/51-android.rules
-
 COPY conda.run /root/conda.run
-RUN chmod 777 /root/conda.run
+
+RUN sudo curl --create-dirs -L -o /usr/local/bin/repo -O -L https://storage.googleapis.com/git-repo-downloads/repo &&\
+    sudo chmod a+rx /usr/local/bin/repo &&\
+    sudo curl --create-dirs -L -o /etc/udev/rules.d/51-android.rules -O -L https://raw.githubusercontent.com/M0Rf30/android-udev-rules/master/51-android.rules &&\
+    sudo chmod 644 /etc/udev/rules.d/51-android.rules &&\
+    sudo chown root /etc/udev/rules.d/51-android.rules &&\
+    chmod 777 /root/conda.run
 
 ENTRYPOINT ["/bin/bash /root/conda.run"]
 
