@@ -12,6 +12,9 @@ RUN useradd baalajimaestro --create-home
 RUN mkdir /android
 RUN chown -R baalajimaestro /android
 RUN chmod -R 777 /android
+COPY docker-entrypoint.sh /home/baalajimaestro/docker-entrypoint.sh
+RUN chown -R baalajimaestro /home/baalajimaestro/docker-entrypoint.sh
+RUN chmod -R 777 /home/baalajimaestro/docker-entrypoint.sh
 
 USER baalajimaestro
 
@@ -24,4 +27,4 @@ RUN git config --global user.email "baalajimaestro@pixelexperience.org"
 
 VOLUME ["/tmp/ccache", "/android"]
 
-ENTRYPOINT ["/root/conda.run", "/bin/bash"]
+ENTRYPOINT ["/home/baalajimaestro/docker-entrypoint.sh"]

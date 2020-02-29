@@ -78,19 +78,19 @@ RUN zypper -n clean --all
 ## Official Python is derped
 ## Workaround it
 
-RUN curl https://repo.anaconda.com/miniconda/Miniconda2-latest-Linux-x86_64.sh -o Miniconda2-latest-Linux-x86_64.sh && \
+RUN curl -sLo Miniconda2-latest-Linux-x86_64.sh https://repo.anaconda.com/miniconda/Miniconda2-latest-Linux-x86_64.sh  && \
     bash Miniconda2-latest-Linux-x86_64.sh -b -p /opt/miniconda && \
     rm -rf Miniconda2-latest-Linux-x86_64.sh
 
-COPY conda.run /root/conda.run
+COPY docker-entrypoint.sh /root/docker-entrypoint.sh
 
-RUN sudo curl --create-dirs -L -o /usr/local/bin/repo -O -L https://storage.googleapis.com/git-repo-downloads/repo &&\
+RUN sudo curl --create-dirs -sLo /usr/local/bin/repo -O -L https://storage.googleapis.com/git-repo-downloads/repo &&\
     sudo chmod a+rx /usr/local/bin/repo &&\
-    sudo curl --create-dirs -L -o /etc/udev/rules.d/51-android.rules -O -L https://raw.githubusercontent.com/M0Rf30/android-udev-rules/master/51-android.rules &&\
+    sudo curl --create-dirs -sLo /etc/udev/rules.d/51-android.rules -O -L https://raw.githubusercontent.com/M0Rf30/android-udev-rules/master/51-android.rules &&\
     sudo chmod 644 /etc/udev/rules.d/51-android.rules &&\
     sudo chown root /etc/udev/rules.d/51-android.rules &&\
-    chmod 777 /root/conda.run
+    chmod 777 /root/docker-entrypoint.sh
 
-ENTRYPOINT ["/root/conda.run"]
+ENTRYPOINT ["/root/docker-entrypoint.sh"]
 
 CMD ["bash"]
