@@ -8,7 +8,9 @@
 FROM baalajimaestro/android_build
 
 RUN sudo echo "baalajimaestro ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers &&\
+    groupadd baalajimaestro &&\
     useradd baalajimaestro --create-home &&\
+    usermod -G baalajimaestro baalajimaestro &&\
     mkdir /android &&\
     chown -R baalajimaestro /android &&\
     chmod -R 777 /android &&\

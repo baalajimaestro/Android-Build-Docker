@@ -65,9 +65,11 @@ RUN zypper -n install bc \
                       patterns-base-minimal_base \
                       readline-devel-32bit \
                       schedtool \
+                      unzip \
                       which \
                       zip \
                       zlib-devel
+                      
 
 RUN zypper -n install gperf libSDL-devel libxml2-tools lzop
 RUN zypper -n install ImageMagick java-1_8_0-openjdk 
