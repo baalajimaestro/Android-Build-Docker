@@ -73,6 +73,8 @@ RUN zypper -n install gperf libSDL-devel libxml2-tools lzop
 RUN zypper -n install ImageMagick java-1_8_0-openjdk 
 RUN zypper -n install gcc-c++ libncurses5 libxslt1 nano squashfs sudo
 
+RUN zypper -n clean --all
+
 ## Official Python is derped
 ## Workaround it
 
@@ -89,6 +91,6 @@ RUN sudo curl --create-dirs -L -o /usr/local/bin/repo -O -L https://storage.goog
     sudo chown root /etc/udev/rules.d/51-android.rules &&\
     chmod 777 /root/conda.run
 
-ENTRYPOINT ["/bin/bash /root/conda.run"]
+ENTRYPOINT ["/root/conda.run"]
 
 CMD ["bash"]
