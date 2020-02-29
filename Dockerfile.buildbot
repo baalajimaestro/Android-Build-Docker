@@ -7,23 +7,21 @@
 # 
 FROM baalajimaestro/android_build
 
-RUN sudo echo "baalajimaestro ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-RUN useradd baalajimaestro --create-home
-RUN mkdir /android
-RUN chown -R baalajimaestro /android
-RUN chmod -R 777 /android
+RUN sudo echo "baalajimaestro ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers &&\
+    useradd baalajimaestro --create-home &&\
+    mkdir /android &&\
+    chown -R baalajimaestro /android &&\
+    chmod -R 777 /android &&\
+    git config --global user.name "baalajimaestro" &&\
+    git config --global user.email "baalajimaestro@pixelexperience.org"
+
 COPY docker-entrypoint.sh /home/baalajimaestro/docker-entrypoint.sh
-RUN chown -R baalajimaestro /home/baalajimaestro/docker-entrypoint.sh
-RUN chmod -R 777 /home/baalajimaestro/docker-entrypoint.sh
+RUN chown -R baalajimaestro /home/baalajimaestro/docker-entrypoint.sh &&\
+    chmod -R 777 /home/baalajimaestro/docker-entrypoint.sh
 
 USER baalajimaestro
 
 ENV CCACHE_DIR=/tmp/ccache
-
-WORKDIR /android
-
-RUN git config --global user.name "baalajimaestro"
-RUN git config --global user.email "baalajimaestro@pixelexperience.org"
 
 VOLUME ["/tmp/ccache", "/android"]
 
