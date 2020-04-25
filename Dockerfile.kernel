@@ -43,15 +43,6 @@ RUN apk add openjdk8 \
             tar \
             build-base --no-cache
 
-RUN curl -L https://github.com/facebook/zstd/releases/download/v1.4.4/zstd-1.4.4.tar.gz -so /root/zstd.tar.gz &> /dev/null && \
-   echo "Building ZSTD from source......" && \
-    cd /root/ && \
-    tar -xf /root/zstd.tar.gz && \
-    cd /root/zstd-1.4.4/ && \
-    make -j8 &> /dev/null && \
-    make install &> /dev/null && \
-    rm -rf /root/zstd*
-
 RUN echo "Installing Proton Clang......" && \
     git clone https://github.com/kdrag0n/proton-clang --depth=1 && \
     echo /root/proton_clang/bin > /tmp/clang_path
