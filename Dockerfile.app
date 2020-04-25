@@ -18,7 +18,7 @@ RUN apt update && \
     curl \
     wget \
     openjdk-11-jdk \
-    libqt5webkit5
+    libqt5webkit5 &> /dev/null || echo "Done"
 
 ENV LD_LIBRARY_PATH=${ANDROID_HOME}/tools/lib64:${ANDROID_HOME}/emulator/lib64:${ANDROID_HOME}/emulator/lib64/qt/lib
 
