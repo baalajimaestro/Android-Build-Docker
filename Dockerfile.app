@@ -19,8 +19,8 @@ RUN cd /opt \
 
 # Install Android SDK
 RUN mkdir ~/.android && echo "### User Sources for Android SDK Manager" > ~/.android/repositories.cfg
-RUN yes | sdkmanager --licenses && yes | sdkmanager --update
-RUN sdkmanager "emulator" "tools" "platform-tools"
+RUN yes | sdkmanager --licenses &> /dev/null && yes | sdkmanager --update &> /dev/null
+RUN sdkmanager "emulator" "tools" "platform-tools" &> /dev/null
 RUN yes | sdkmanager \
     "platforms;android-29" \
     "platforms;android-28" \
