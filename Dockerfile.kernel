@@ -53,12 +53,8 @@ RUN curl -L https://github.com/facebook/zstd/releases/download/v1.4.4/zstd-1.4.4
     rm -rf /root/zstd*
 
 RUN echo "Installing Proton Clang......" && \
-    curl -L "https://kdrag0n.dev/files/redirector/proton_clang-latest.tar.zst" -so /root/proton-clang.tar.zst &> /dev/null && \
-    cd /root/ && \
-    tar -I zstd -xf /root/proton-clang.tar.zst && \
-    cd /root/proton_clang* && \
-    echo $(pwd)/bin > /tmp/clang_path && \
-    rm -rf /root/proton-clang.tar.zst
+    git clone https://github.com/kdrag0n/proton-clang --depth=1 && \
+    echo /root/proton_clang/bin > /tmp/clang_path
 
 RUN echo "Cloning Toolchains....." && \
     git clone https://github.com/baalajimaestro/aarch64-maestro-linux-android -b 05022020 --depth=1 /root/gcc-10 &> /dev/null && \
