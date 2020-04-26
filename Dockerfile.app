@@ -18,26 +18,14 @@ RUN apt update && \
     curl \
     wget \
     openjdk-11-jdk \
+    maven \
+    gradle \
+    build-essential \
     libqt5webkit5 &> /dev/null || echo "Done"
 
-ENV LD_LIBRARY_PATH=${ANDROID_HOME}/tools/lib64:${ANDROID_HOME}/emulator/lib64:${ANDROID_HOME}/emulator/lib64/qt/lib
-
-ENV ANDROID_HOME /opt/android-sdk-linux
-RUN dpkg --add-architecture i386
-
-RUN apt-get install -y \
-    libc6:i386 libstdc++6:i386 libgcc1:i386 libncurses5:i386 libz1:i386 \
-    xvfb lib32z1 lib32stdc++6 build-essential \
-    libcurl4-openssl-dev libglu1-mesa libxi-dev libxmu-dev \
-    libglu1-mesa-dev
-
-RUN apt-get purge maven maven2 \
-    && apt-get update \
-    && apt-get -y install maven gradle \
-    && mvn --version \
-    && gradle -v
-
 # Download Android SDK
+ENV LD_LIBRARY_PATH=${ANDROID_HOME}/tools/lib64:${ANDROID_HOME}/emulator/lib64:${ANDROID_HOME}/emulator/lib64/qt/lib
+ENV ANDROID_HOME /opt/android-sdk-linux
 
 RUN cd /opt \
     && wget -q https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip -O android-sdk-tools.zip \
