@@ -6,34 +6,31 @@ jobs:
   include:
     - stage: Build Dependency Images
       name: "AOSP Image"
-      before_script:
-        - sudo apt update &> /dev/null
-        - sudo apt install apt-transport-https ca-certificates curl gnupg-agent software-properties-common -y &> /dev/null
-        - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-        - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" &> /dev/null
-        - sudo apt install docker-ce docker-ce-cli containerd.io &> /dev/null
-      script:
-        - docker build -f Dockerfile.aosp . -t baalajimaestro/android_build:latest
-        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        - docker push baalajimaestro/android_build
-    - script:
-        - docker build -f Dockerfile.kernel . -t baalajimaestro/kernel_build:latest
-        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        - docker push baalajimaestro/kernel_build
-      name: "Kernel Image"
-    - script:
-        - docker build -f Dockerfile.app . -t baalajimaestro/app_build:latest
-        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        - docker push baalajimaestro/app_build
-      name: "App Image"            
+      env:
+      - DOCKERFILE=Dockerfile.aosp
+      - OUTPUT=android_build
+    - name: "Kernel Image"
+      env:
+      - DOCKERFILE=Dockerfile.kernel
+      - OUTPUT=kernel_build
+    - name: "App Image"
+      env:
+      - DOCKERFILE=Dockerfile.app
+      - OUTPUT=kernel_build
     - stage: Build the BuildBot Runner
       name: "BuildBot"
-      script:
-      - sudo apt update &> /dev/null
-      - sudo apt install apt-transport-https ca-certificates curl gnupg-agent software-properties-common -y &> /dev/null
-      - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-      - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" &> /dev/null
-      - sudo apt install docker-ce docker-ce-cli containerd.io &> /dev/null
-      - docker build -f Dockerfile.buildbot . -t baalajimaestro/aosp_buildbot:latest
-      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      - docker push baalajimaestro/aosp_buildbot
+      env:
+        - DOCKERFILE=Dockerfile.buildbot
+        - OUTPUT=aosp_build
+      
+before_script:
+  - sudo apt update &> /dev/null
+  - sudo apt install apt-transport-https ca-certificates curl gnupg-agent software-properties-common -y &> /dev/null
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" &> /dev/null
+  - sudo apt install docker-ce docker-ce-cli containerd.io &> /dev/null
+script:
+  - docker build -f ${DOCKERFILE} . -t baalajimaestro/${OUTPUT}:latest
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker push baalajimaestro/${OUTPUT}
+  
