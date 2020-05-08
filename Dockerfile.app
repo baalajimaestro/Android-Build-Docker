@@ -3,7 +3,7 @@ FROM fedora:latest
 RUN dnf -y groupinstall "Development Tools" > /dev/null ; dnf clean all
 
 # Install java (OpenJDK)
-RUN dnf -y install java-1.8.0-openjdk maven > /dev/null ; dnf clean all
+RUN dnf -y install java-11-openjdk maven > /dev/null ; dnf clean all
 
 # Install 32bit Libraries
 RUN dnf -y upgrade libstdc++ > /dev/null ; dnf clean all
@@ -24,7 +24,7 @@ ENV PATH=${ANDROID_HOME}/emulator:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bi
 RUN mkdir ~/.android && echo "### User Sources for Android SDK Manager" > ~/.android/repositories.cfg
 RUN yes | sdkmanager --sdk_root=${ANDROID_HOME} --licenses > /dev/null
 RUN yes | sdkmanager --sdk_root=${ANDROID_HOME} --update > /dev/null
-RUN sdkmanager --sdk_root=${ANDROID_HOME} "emulator" "tools" "platform-tools"
+RUN sdkmanager --sdk_root=${ANDROID_HOME} "emulator" "tools" "platform-tools" > /dev/null
 RUN yes | sdkmanager --sdk_root=${ANDROID_HOME} \
     "platforms;android-29" \
     "platforms;android-28" \
@@ -43,10 +43,8 @@ RUN yes | sdkmanager --sdk_root=${ANDROID_HOME} \
     "build-tools;27.0.0" \
     "build-tools;26.0.2" \
     "build-tools;26.0.1" \
-    "build-tools;25.0.3"
-
-# CleanUp
-RUN apt clean
-RUN sdkmanager --sdk_root=${ANDROID_HOME} "platforms;android-29"
+    "build-tools;25.0.3" > /dev/null
+    
+RUN sdkmanager --sdk_root=${ANDROID_HOME} "platforms;android-29" > /dev/null
 
 CMD ["/bin/bash"]
