@@ -1,49 +1,23 @@
-FROM debian:bullseye-slim
+FROM fedora:latest
 
-RUN apt update && \
-    apt install -y \  
-    git \
-    sudo \
-    apt-transport-https \
-    ca-certificates \
-    software-properties-common \
-    build-essential \
-    tar \
-    lsb-release \
-    gzip \
-    unzip \
-    zip \
-    bzip2 \
-    gnupg \
-    curl \
-    wget \
-    openjdk-11-jdk \
-    libqt5webkit5
+RUN dnf -y groupinstall "Development Tools"; dnf clean all
 
-ENV LD_LIBRARY_PATH=${ANDROID_HOME}/tools/lib64:${ANDROID_HOME}/emulator/lib64:${ANDROID_HOME}/emulator/lib64/qt/lib
+# Install java (OpenJDK)
+RUN dnf -y install java-1.8.0-openjdk maven; dnf clean all
 
-ENV ANDROID_HOME /opt/android-sdk-linux
-RUN dpkg --add-architecture i386
-
-RUN apt-get install -y \
-    libc6:i386 libstdc++6:i386 libgcc1:i386 libncurses5:i386 libz1:i386 \
-    xvfb lib32z1 lib32stdc++6 build-essential \
-    libcurl4-openssl-dev libglu1-mesa libxi-dev libxmu-dev \
-    libglu1-mesa-dev
-
-RUN apt-get purge maven maven2 \
-    && apt-get update \
-    && apt-get -y install maven gradle \
-    && mvn --version \
-    && gradle -v
+# Install 32bit Libraries
+RUN dnf -y upgrade libstdc++; dnf clean all
+RUN dnf -y install glibc.i686 libstdc++.i686 glibc-devel.i686 zlib-devel.i686 ncurses-devel.i686 libX11-devel.i686 libXrender.i686; dnf clean all
 
 # Download Android SDK
+ENV LD_LIBRARY_PATH=${ANDROID_HOME}/tools/lib64:${ANDROID_HOME}/emulator/lib64:${ANDROID_HOME}/emulator/lib64/qt/lib
+ENV ANDROID_HOME /opt/android-sdk-linux
 
 RUN cd /opt \
-    && wget -q https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip -O android-sdk-tools.zip \
+    && curl -sL https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip -o android-sdk-tools.zip \
     && unzip -q android-sdk-tools.zip -d ${ANDROID_HOME} \
     && rm android-sdk-tools.zip
-ENV PATH=${ANDROID_HOME}/emulator:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:${PATH}
+ENV PATH=${ANDROID_HOME}/emulator:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:/opt/maven/bin:/opt/gradle/bin:${PATH}
 
 # Install Android SDK
 RUN mkdir ~/.android && echo "### User Sources for Android SDK Manager" > ~/.android/repositories.cfg
