@@ -21,7 +21,7 @@ ENV PATH=${ANDROID_HOME}/emulator:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bi
 
 # Install Android SDK
 RUN mkdir ~/.android && echo "### User Sources for Android SDK Manager" > ~/.android/repositories.cfg
-RUN yes | sdkmanager --licenses && yes | sdkmanager --update
+RUN yes | sdkmanager --licenses &> /dev/null && yes | sdkmanager --update &> /dev/null
 RUN sdkmanager "emulator" "tools" "platform-tools"
 RUN yes | sdkmanager \
     "platforms;android-29" \
