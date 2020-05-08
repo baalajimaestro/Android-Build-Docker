@@ -3,7 +3,7 @@ FROM fedora:latest
 RUN dnf -y groupinstall "Development Tools" > /dev/null ; dnf clean all
 
 # Install java (OpenJDK)
-RUN dnf -y install java-11-openjdk maven > /dev/null ; dnf clean all
+RUN dnf -y install java-11-openjdk maven moreutils > /dev/null ; dnf clean all
 
 # Install 32bit Libraries
 RUN dnf -y upgrade libstdc++ > /dev/null ; dnf clean all
