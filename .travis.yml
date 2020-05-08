@@ -1,5 +1,5 @@
 language: minimal
-
+os: linux
 dist: bionic
 
 jobs:
@@ -24,17 +24,17 @@ jobs:
         - OUTPUT=aosp_build
       
 before_script:
-  - set +x
-  - echo "****Updating Docker before proceeding with builds****"
+  # Update Docker coz travis has 18.06
   - sudo apt update &> /dev/null
   - sudo apt install apt-transport-https ca-certificates curl gnupg-agent software-properties-common -y &> /dev/null
-  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - &> /dev/null
   - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" &> /dev/null
-  - sudo apt install docker-ce docker-ce-cli containerd.io &> /dev/null
+  - sudo apt install -y docker-ce docker-ce-cli containerd.io &> /dev/null
   - sudo systemctl start docker
+
 script:
-  - set +x
   - docker build -f ${DOCKERFILE} . -t baalajimaestro/${OUTPUT}:latest
+
+after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker push baalajimaestro/${OUTPUT}
-  
