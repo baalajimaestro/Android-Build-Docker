@@ -16,7 +16,7 @@ jobs:
     - name: "App Image"
       env:
       - DOCKERFILE=Dockerfile.app
-      - OUTPUT=kernel_build
+      - OUTPUT=app_build
     - stage: Build the BuildBot Runner
       name: "BuildBot"
       env:
