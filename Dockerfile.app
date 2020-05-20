@@ -1,3 +1,10 @@
+#
+# Copyright © 2020 Maestro Creativescape
+#
+# SPDX-License-Identifier: GPL-3.0
+#
+# Docker Image Builder for Android App BuildSystem on Fedora
+# 
 FROM fedora:latest
 
 RUN dnf -y groupinstall "Development Tools" > /dev/null ; dnf clean all
