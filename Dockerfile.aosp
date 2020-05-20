@@ -14,7 +14,7 @@ RUN dnf -y install ncurses-* > /dev/null
 RUN dnf -y install SDL.* SDL-* SDL2.* SDL2-* > /dev/null
 RUN dnf -y install gtk3 gtk3-devel.* > /dev/null
 RUN dnf -y install libxml2 libxml2-devel.* lzma > /dev/null
-RUN dnf -y install gperf pngcrush schedtool > /dev/null
+RUN dnf -y install gperf pngcrush schedtool moreutils > /dev/null
 RUN dnf -y install python3 python2 python3-pip which procps hostname bc diffutils patch ccache kmod > /dev/null
 
 RUN curl https://storage.googleapis.com/git-repo-downloads/repo -sLo /usr/bin/repo
