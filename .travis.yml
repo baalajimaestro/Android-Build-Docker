@@ -17,11 +17,6 @@ jobs:
       env:
       - DOCKERFILE=Dockerfile.app
       - OUTPUT=app_build
-    - stage: Build the BuildBot Runner
-      name: "BuildBot"
-      env:
-        - DOCKERFILE=Dockerfile.buildbot
-        - OUTPUT=aosp_build
       
 before_script:
   # Update Docker coz travis has 18.06

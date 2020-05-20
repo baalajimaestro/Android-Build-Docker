@@ -1,98 +1,33 @@
 #
-# Copyright © 2019 Maestro Creativescape
+# Copyright © 2020 Maestro Creativescape
 #
 # SPDX-License-Identifier: GPL-3.0
 #
-# Docker Image Builder for Android BuildSystem on OpenSUSE
+# Docker Image Builder for Android BuildSystem on Fedora
 # 
-FROM opensuse/tumbleweed
+FROM fedora:32
 
-# We're using "docker" as Worker
-ENV WORKER=docker
+RUN dnf -y groupinstall 'Development Tools' 'Development Libraries' > /dev/null
+RUN dnf -y install java-1.8.0-openjdk-devel java-1.8.0-openjdk > /dev/null
+RUN dnf -y install readline.* readline-devel.* zlibrary-devel.* zlibrary.* > /dev/null
+RUN dnf -y install ncurses-* > /dev/null
+RUN dnf -y install SDL.* SDL-* SDL2.* SDL2-* > /dev/null
+RUN dnf -y install gtk3 gtk3-devel.* > /dev/null
+RUN dnf -y install libxml2 libxml2-devel.* lzma > /dev/null
+RUN dnf -y install gperf pngcrush schedtool > /dev/null
+RUN dnf -y install python3 python2 python3-pip which procps hostname bc diffutils patch ccache kmod > /dev/null
 
-RUN zypper -n refresh
-RUN zypper -n install autoconf \
-                      automake \
-                      binutils \
-                      bison \
-                      blog \
-                      chkstat \
-                      cpp \
-                      cpp9 \
-                      cracklib
+RUN curl https://storage.googleapis.com/git-repo-downloads/repo -sLo /usr/bin/repo
+RUN chmod +x /usr/bin/repo
 
-RUN zypper -n install dbus-1 \
-                      device-mapper \
-                      flex \
-                      gcc \
-                      gcc9 \
-                      gdbm-devel 
+RUN ln -s /usr/bin/python3 /usr/bin/python
+RUN useradd maestroci --create-home
+RUN mkdir /proj && chown maestroci /proj
 
-# Necessary Libs
-RUN zypper -n install bc \
-                      curl \
-                      gettext-runtime \
-                      gettext-tools \
-                      git \
-                      glibc-devel-32bit \
-                      iproute2 \
-                      kbd \
-                      kbd-legacy \
-                      kmod \
-                      libapparmor1 \
-                      libargon2-1 \
-                      libblkid1 \
-                      libcryptsetup12 \
-                      libfdisk1 \
-                      libkmod2 \
-                      libltdl7 \
-                      libmount1 \
-                      libnl3-200 \
-                      libnl-config \
-                      libpcre2-8-0 \
-                      libqrencode4 \
-                      libseccomp2 \
-                      libsmartcols1 \
-                      libtool \
-                      libutempter0 \
-                      libz1-32bit \
-                      make \
-                      makeinfo \
-                      ncurses-devel \
-                      ncurses-devel-32bit \
-                      pam-config patch \
-                      patterns-base-basesystem \
-                      patterns-base-minimal_base \
-                      readline-devel-32bit \
-                      schedtool \
-                      unzip \
-                      which \
-                      zip \
-                      zlib-devel
-                      
+USER maestroci
 
-RUN zypper -n install gperf libSDL-devel libxml2-tools lzop
-RUN zypper -n install ImageMagick java-1_8_0-openjdk 
-RUN zypper -n install gcc-c++ libncurses5 libxslt1 nano squashfs sudo
+WORKDIR /proj
 
-RUN zypper -n clean --all
-
-## Official Python is derped
-## Workaround it
-
-RUN curl -sLo Miniconda2-latest-Linux-x86_64.sh https://repo.anaconda.com/miniconda/Miniconda2-latest-Linux-x86_64.sh  && \
-    bash Miniconda2-latest-Linux-x86_64.sh -b -p /opt/miniconda && \
-    rm -rf Miniconda2-latest-Linux-x86_64.sh
-
-COPY docker-entrypoint.sh /root/docker-entrypoint.sh
-
-RUN sudo curl --create-dirs -sLo /usr/local/bin/repo -O -L https://storage.googleapis.com/git-repo-downloads/repo &&\
-    sudo chmod a+rx /usr/local/bin/repo &&\
-    sudo curl --create-dirs -sLo /etc/udev/rules.d/51-android.rules -O -L https://raw.githubusercontent.com/M0Rf30/android-udev-rules/master/51-android.rules &&\
-    sudo chmod 644 /etc/udev/rules.d/51-android.rules &&\
-    sudo chown root /etc/udev/rules.d/51-android.rules &&\
-    chmod 777 /root/docker-entrypoint.sh
-
-ENTRYPOINT ["/root/docker-entrypoint.sh"]
+VOLUME ["/proj"]
 
 CMD ["bash"]
