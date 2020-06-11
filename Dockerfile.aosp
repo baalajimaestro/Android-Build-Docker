@@ -20,6 +20,7 @@ RUN dnf -y install python3 python2 python3-pip which procps hostname bc diffutil
 RUN curl https://storage.googleapis.com/git-repo-downloads/repo -sLo /usr/bin/repo
 RUN chmod +x /usr/bin/repo
 
+RUN unlink /usr/bin/python
 RUN ln -s /usr/bin/python3 /usr/bin/python
 RUN useradd maestroci --create-home
 RUN mkdir /proj && chown maestroci /proj
