@@ -21,7 +21,6 @@ RUN curl https://rclone.org/install.sh | sudo bash -s beta
 RUN curl https://storage.googleapis.com/git-repo-downloads/repo -sLo /usr/bin/repo
 RUN chmod +x /usr/bin/repo
 
-RUN unlink /usr/bin/python
 RUN ln -s /usr/bin/python3 /usr/bin/python
 RUN useradd maestroci --create-home
 RUN mkdir /proj && chown maestroci /proj
