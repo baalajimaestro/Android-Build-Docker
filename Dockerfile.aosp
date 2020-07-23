@@ -16,6 +16,7 @@ RUN dnf -y install gtk3 gtk3-devel.* > /dev/null
 RUN dnf -y install libxml2 libxml2-devel.* lzma > /dev/null
 RUN dnf -y install gperf pngcrush schedtool moreutils > /dev/null
 RUN dnf -y install python3 python2 python3-pip which procps hostname bc diffutils patch ccache kmod rsync > /dev/null
+RUN curl https://rclone.org/install.sh | sudo bash -s beta
 
 RUN curl https://storage.googleapis.com/git-repo-downloads/repo -sLo /usr/bin/repo
 RUN chmod +x /usr/bin/repo
@@ -27,8 +28,10 @@ RUN mkdir /proj && chown maestroci /proj
 
 USER maestroci
 
+RUN rclone config file
+
 WORKDIR /proj
 
-VOLUME ["/proj"]
+VOLUME ["/proj", "/home/maestroci/.config/rclone/rclone.conf"]
 
 CMD ["bash"]
